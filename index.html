@@ -18,6 +18,7 @@
       min-height: 100vh;
       overflow: hidden;
       color: white;
+      touch-action: manipulation;
     }
     
     #scoreboard {
@@ -175,9 +176,64 @@
         opacity: 0;
       }
     }
+    
+    #loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(28, 0, 51, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    #loading h2 {
+      margin-bottom: 20px;
+      color: #ff66c4;
+    }
+    
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 102, 196, 0.3);
+      border-top: 5px solid #ff66c4;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .file-path {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 15px;
+      border-radius: 8px;
+      margin: 5px 0;
+      font-size: 14px;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 </head>
 <body>
+  <div id="loading">
+    <h2>Loading Game Assets</h2>
+    <div class="loader"></div>
+    <div class="file-path">Loading: logo.png</div>
+    <div class="file-path">Loading: char1.png</div>
+    <div class="file-path">Loading: char2.png</div>
+    <div class="file-path">Loading: click.wav</div>
+    <div class="file-path">Loading: pop.mp3</div>
+  </div>
+  
   <div id="scoreboard">
     <div>Score: <span id="score">0</span></div>
     <div>Time: <span id="time">30</span>s</div>
@@ -209,6 +265,8 @@
     const popup = document.getElementById('popup');
     const popupText = document.getElementById('popupText');
     const popupButton = popup.querySelector('button');
+    const loadingScreen = document.getElementById('loading');
+    const filePaths = document.querySelectorAll('.file-path');
     
     // Set canvas to full screen
     function resizeCanvas() {
@@ -219,22 +277,64 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     
-    // Load your external PNG files
-    const logoImg = new Image();
-    logoImg.src = 'logo.png'; // Your logo.png
+    // Asset paths - REPLACE WITH YOUR ACTUAL FILE PATHS
+    const assets = [
+      { type: 'image', id: 'logo', path: 'logo.png', element: null },
+      { type: 'image', id: 'char1', path: 'char1.png', element: null },
+      { type: 'image', id: 'char2', path: 'char2.png', element: null },
+      { type: 'audio', id: 'click', path: 'click.wav', element: null },
+      { type: 'audio', id: 'pop', path: 'pop.mp3', element: null }
+    ];
     
-    const char1Img = new Image();
-    char1Img.src = 'char1.png'; // Your char1.png
+    // Preload assets
+    function loadAssets() {
+      let loadedCount = 0;
+      const totalAssets = assets.length;
+      
+      function updateProgress() {
+        loadedCount++;
+        const percent = Math.round((loadedCount / totalAssets) * 100);
+        filePaths.forEach(el => {
+          if (el.textContent.includes('✔')) return;
+          if (el.textContent.includes(assets[loadedCount-1]?.path)) {
+            el.textContent = '✔ Loaded: ' + assets[loadedCount-1].path;
+            el.style.color = '#6eff7e';
+          }
+        });
+        
+        if (loadedCount === totalAssets) {
+          setTimeout(() => {
+            loadingScreen.style.display = 'none';
+          }, 500);
+        }
+      }
+      
+      assets.forEach(asset => {
+        if (asset.type === 'image') {
+          asset.element = new Image();
+          asset.element.onload = updateProgress;
+          asset.element.onerror = () => {
+            console.error(`Error loading image: ${asset.path}`);
+            updateProgress();
+          };
+          asset.element.src = asset.path;
+        } 
+        else if (asset.type === 'audio') {
+          asset.element = new Audio();
+          asset.element.onloadeddata = updateProgress;
+          asset.element.onerror = () => {
+            console.error(`Error loading audio: ${asset.path}`);
+            updateProgress();
+          };
+          asset.element.src = asset.path;
+          asset.element.preload = 'auto';
+          asset.element.load();
+        }
+      });
+    }
     
-    const char2Img = new Image();
-    char2Img.src = 'char2.png'; // Your char2.png
-    
-    // Load your external sound files
-    const clickSound = new Audio();
-    clickSound.src = 'click.wav'; // Your click.wav
-    
-    const popSound = new Audio();
-    popSound.src = 'pop.mp3'; // Your pop.mp3
+    // Start loading assets
+    loadAssets();
     
     // Game state
     let logos = [];
@@ -247,22 +347,28 @@
     
     // Create game elements with 20% reduced speed
     function createLogo() {
-      const x = Math.random() * (canvas.width - 60);
+      const logoAsset = assets.find(a => a.id === 'logo');
+      const width = 60;
+      const height = 60;
+      
       logos.push({ 
-        x, 
-        y: -60,
-        width: 60,
-        height: 60,
+        x: Math.random() * (canvas.width - width),
+        y: -height,
+        width: width,
+        height: height,
         speed: (2 + Math.random() * 3) * 0.8, // 20% slower
         type: 'logo',
-        img: logoImg
+        img: logoAsset.element
       });
     }
     
     function spawnCharacter() {
+      const char1Asset = assets.find(a => a.id === 'char1');
+      const char2Asset = assets.find(a => a.id === 'char2');
+      
       const types = [
-        { type: 'char1', img: char1Img, points: 3 },
-        { type: 'char2', img: char2Img, points: 5 }
+        { type: 'char1', img: char1Asset.element, points: 3 },
+        { type: 'char2', img: char2Asset.element, points: 5 }
       ];
       const charType = types[Math.floor(Math.random() * types.length)];
       
@@ -313,7 +419,7 @@
     
     // Draw game elements
     function drawLogo(logo) {
-      if (logo.img.complete && logo.img.naturalWidth !== 0) {
+      if (logo.img && logo.img.complete && logo.img.naturalWidth !== 0) {
         ctx.drawImage(logo.img, logo.x, logo.y, logo.width, logo.height);
       } else {
         // Fallback if image not loaded
@@ -325,7 +431,7 @@
     }
     
     function drawCharacter(char) {
-      if (char.img.complete && char.img.naturalWidth !== 0) {
+      if (char.img && char.img.complete && char.img.naturalWidth !== 0) {
         ctx.drawImage(char.img, char.x, char.y, char.width, char.height);
       } else {
         // Fallback if image not loaded
@@ -411,6 +517,13 @@
       // Create tap effect for visual feedback
       createTapEffect(e.clientX, e.clientY);
       
+      // Play sound effect
+      const popAsset = assets.find(a => a.id === 'pop');
+      if (popAsset.element) {
+        popAsset.element.currentTime = 0;
+        popAsset.element.play().catch(e => console.log("Audio error"));
+      }
+      
       // Check logo taps
       for (let i = logos.length - 1; i >= 0; i--) {
         const logo = logos[i];
@@ -420,8 +533,6 @@
           scoreElement.textContent = score;
           logos.splice(i, 1);
           createParticles(clickX, clickY, '#ff66c4');
-          popSound.currentTime = 0;
-          popSound.play().catch(e => console.log("Audio error"));
           return;
         }
       }
@@ -439,8 +550,6 @@
           scoreElement.textContent = score;
           characters.splice(i, 1);
           createParticles(clickX, clickY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
-          popSound.currentTime = 0;
-          popSound.play().catch(e => console.log("Audio error"));
           return;
         }
       }
@@ -468,8 +577,11 @@
     }
     
     function startGame() {
-      clickSound.currentTime = 0;
-      clickSound.play().catch(e => console.log("Audio error"));
+      const clickAsset = assets.find(a => a.id === 'click');
+      if (clickAsset.element) {
+        clickAsset.element.currentTime = 0;
+        clickAsset.element.play().catch(e => console.log("Audio error"));
+      }
       
       gameRunning = true;
       resetGame();
