@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tap to Prove</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #1c0033;
+      overflow: hidden;
+    }
+    #scoreboard {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      font-size: 24px;
+      color: white;
+      text-align: center;
+      z-index: 10;
+      display: none;
+    }
+    canvas {
+      display: block;
+      background-color: transparent;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: white;
+    }
+    #startBtn, #replayBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 30px;
+      font-size: 20px;
+      background: #ff66c4;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #ff66c4;
+    }
+    #replayBtn { display: none; }
+
+    #popup {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #ff66c4;
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      font-size: 22px;
+      display: none;
+      z-index: 100;
+    }
+    #popup button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: white;
+      color: #ff66c4;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="scoreboard">
+    Score: <span id="score">0</span> | Time Left: <span id="time">30</span>s
+  </div>
+  <canvas id="gameCanvas"></canvas>
+  <button id="startBtn">▶ Play</button>
+  <button id="replayBtn">Replay</button>
+  <div id="popup">
+    <div id="popupText"></div>
+    <button onclick="startGame()">Replay</button>
+  </div>
+  <footer>powered by melek</footer>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const logoImg = new Image(); logoImg.src = 'logo.png';
+    const gpuImg = new Image(); gpuImg.src = 'gpu.png';
+    const char1Img = new Image(); char1Img.src = 'char1.png';
+    const char2Img = new Image(); char2Img.src = 'char2.png';
+
+    let logos = [];
+    let gpu = null;
+    let characters = [];
+    let score = 0;
+    let timeLeft = 30;
+    let gameRunning = false;
+    let spawnInterval, gameTimer, gpuTimeout, charSpawnInterval;
+    let pauseTime = false;
+    let gpuCount = 0;
+
+    function createLogo() {
+      if (!pauseTime) {
+        const x = Math.random() * (canvas.width - 120);
+        logos.push({ x, y: -120 });
+      }
+    }
+
+    function spawnCharacter() {
+      const img = Math.random() < 0.5 ? char1Img : char2Img;
+      const x = Math.random() * (canvas.width - 100);
+      characters.push({ x, y: -100, img });
+    }
+
+    function spawnGpu() {
+      if (gpuCount >= 5) return;
+      gpuCount++;
+      const x = Math.random() * (canvas.width - 180);
+      gpu = { x, y: -90 };
+    }
+
+    function update() {
+      if (!gameRunning || pauseTime) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      logos.forEach((logo, index) => {
+        logo.y += 3;
+        ctx.drawImage(logoImg, logo.x, logo.y, 120, 120);
+        if (logo.y > canvas.height + 120) logos.splice(index, 1);
+      });
+
+      characters.forEach((char, index) => {
+        char.y += 2.5;
+        ctx.drawImage(char.img, char.x, char.y, 100, 100);
+        if (char.y > canvas.height + 100) characters.splice(index, 1);
+      });
+
+      if (gpu) {
+        gpu.y += 2;
+        ctx.drawImage(gpuImg, gpu.x, gpu.y, 180, 90);
+        if (gpu.y > canvas.height + 90) gpu = null;
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    canvas.addEventListener('click', function(e) {
+      if (!gameRunning || pauseTime) return;
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      logos.forEach((logo, index) => {
+        if (clickX >= logo.x && clickX <= logo.x + 120 &&
+            clickY >= logo.y && clickY <= logo.y + 120) {
+          score++;
+          document.getElementById('score').textContent = score;
+          logos.splice(index, 1);
+        }
+      });
+
+      characters.forEach((char, index) => {
+        if (clickX >= char.x && clickX <= char.x + 100 &&
+            clickY >= char.y && clickY <= char.y + 100) {
+          score += 5;
+          characters.splice(index, 1);
+          document.getElementById('score').textContent = score;
+        }
+      });
+
+      if (gpu && clickX >= gpu.x && clickX <= gpu.x + 180 &&
+          clickY >= gpu.y && clickY <= gpu.y + 90) {
+        pauseTime = true;
+        setTimeout(() => { pauseTime = false; }, 3000);
+        gpu = null;
+      }
+    });
+
+    function resetGame() {
+      logos = [];
+      characters = [];
+      gpu = null;
+      score = 0;
+      timeLeft = 30;
+      pauseTime = false;
+      gpuCount = 0;
+      document.getElementById('score').textContent = score;
+      document.getElementById('time').textContent = timeLeft;
+      document.getElementById('scoreboard').style.display = 'block';
+      document.getElementById('popup').style.display = 'none';
+    }
+
+    function startGame() {
+      gameRunning = true;
+      resetGame();
+      document.getElementById('startBtn').style.display = 'none';
+      document.getElementById('replayBtn').style.display = 'none';
+      spawnInterval = setInterval(createLogo, 700);
+      charSpawnInterval = setInterval(spawnCharacter, 1800);
+      gpuTimeout = setInterval(spawnGpu, 6000);
+      gameTimer = setInterval(() => {
+        if (!pauseTime) timeLeft--;
+        document.getElementById('time').textContent = timeLeft;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+      update();
+    }
+
+    function endGame() {
+      clearInterval(spawnInterval);
+      clearInterval(gameTimer);
+      clearInterval(gpuTimeout);
+      clearInterval(charSpawnInterval);
+      gameRunning = false;
+      document.getElementById('replayBtn').style.display = 'block';
+      document.getElementById('popupText').textContent = '⏱️Time Up! 📃Your Score ' + score + ' proofs.';
+      document.getElementById('popup').style.display = 'block';
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('replayBtn').addEventListener('click', startGame);
+  </script>
+</body>
+</html>
