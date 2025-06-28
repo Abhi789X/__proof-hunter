@@ -3,39 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prove HUNTER</title>
+  <title>Tap to Prove</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     body {
       background: linear-gradient(135deg, #1c0033, #0b0019);
       min-height: 100vh;
       overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: white;
-    }
-    
-    .container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      z-index: 10;
+      width: 100%;
+    }
+    
+    h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, #ff66c4, #ff9a8b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 15px rgba(255, 102, 196, 0.5);
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      color: #c0a3d9;
+      max-width: 600px;
+      line-height: 1.6;
+      margin: 0 auto;
+    }
+    
+    .container {
+      display: flex;
+      flex-wrap: wrap;
       justify-content: center;
+      gap: 30px;
+      max-width: 1200px;
+      width: 100%;
+    }
+    
+    .game-area {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
     }
     
     #scoreboard {
-      position: absolute;
-      top: 20px;
-      width: 90%;
-      max-width: 500px;
-      background: rgba(255, 102, 196, 0.2);
-      border-radius: 50px;
+      width: 100%;
+      background: rgba(255, 102, 196, 0.15);
+      border-radius: 20px;
       padding: 15px 30px;
       font-size: 24px;
       text-align: center;
@@ -43,32 +73,28 @@
       display: flex;
       justify-content: space-between;
       backdrop-filter: blur(5px);
-      border: 2px solid rgba(255, 102, 196, 0.5);
-      box-shadow: 0 0 20px rgba(255, 102, 196, 0.3);
+      border: 2px solid rgba(255, 102, 196, 0.3);
+      box-shadow: 0 0 20px rgba(255, 102, 196, 0.2);
+      margin-bottom: 20px;
     }
     
     canvas {
       display: block;
       background: rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
+      border-radius: 15px;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      height: 500px;
     }
     
-    footer {
-      position: absolute;
-      bottom: 15px;
-      width: 100%;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 14px;
-      z-index: 10;
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
     }
     
     .btn {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       padding: 18px 40px;
       font-size: 24px;
       font-weight: bold;
@@ -80,10 +106,12 @@
       box-shadow: 0 0 20px rgba(255, 102, 196, 0.5);
       transition: all 0.3s ease;
       z-index: 20;
+      width: 100%;
+      text-align: center;
     }
     
     .btn:hover {
-      transform: translate(-50%, -50%) scale(1.05);
+      transform: scale(1.05);
       box-shadow: 0 0 30px rgba(255, 102, 196, 0.8);
     }
     
@@ -134,29 +162,14 @@
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     }
     
-    #instructions {
-      position: absolute;
-      top: 80px;
-      width: 90%;
-      max-width: 500px;
-      text-align: center;
-      font-size: 18px;
-      line-height: 1.6;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 15px;
-      display: none;
-      backdrop-filter: blur(5px);
-    }
-    
     .pulse {
       animation: pulse 1.5s infinite;
     }
     
     @keyframes pulse {
-      0% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.05); }
-      100% { transform: translate(-50%, -50%) scale(1); }
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
     
     .particle {
@@ -168,9 +181,6 @@
     }
     
     #soundToggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
       width: 50px;
       height: 50px;
       background: rgba(255, 255, 255, 0.1);
@@ -182,42 +192,175 @@
       z-index: 100;
       backdrop-filter: blur(5px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 24px;
+      margin: 20px auto;
     }
     
-    #soundToggle i {
+    .game-elements {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 400px;
+      backdrop-filter: blur(5px);
+    }
+    
+    .element-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      width: 100%;
+      backdrop-filter: blur(5px);
+    }
+    
+    .element-card .preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+      overflow: hidden;
+    }
+    
+    .element-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .logo-preview {
+      background: linear-gradient(135deg, #ff66c4, #ff9a8b);
+    }
+    
+    .char1-preview {
+      background: linear-gradient(135deg, #6a0dad, #a4508b);
+    }
+    
+    .char2-preview {
+      background: linear-gradient(135deg, #00aaff, #00d2ff);
+    }
+    
+    .instructions {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+      margin-top: 20px;
+    }
+    
+    .instructions h3 {
+      color: #ff66c4;
+      margin-bottom: 15px;
       font-size: 24px;
+    }
+    
+    .instructions ul {
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+      font-size: 18px;
+    }
+    
+    footer {
+      width: 100%;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+      z-index: 10;
+      margin-top: 30px;
+      padding: 10px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .game-elements {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="header">
+    <h1>TAP TO PROVE</h1>
+    <div class="subtitle">Tap the falling objects to earn points before time runs out!</div>
+  </div>
+  
   <div class="container">
-    <div id="scoreboard">
-      <div>Score: <span id="score">0</span></div>
-      <div>Time: <span id="time">30</span>s</div>
+    <div class="game-area">
+      <div id="scoreboard">
+        <div>Score: <span id="score">0</span></div>
+        <div>Time: <span id="time">30</span>s</div>
+      </div>
+      
+      <canvas id="gameCanvas"></canvas>
+      
+      <button id="startBtn" class="btn pulse">▶ PLAY</button>
+      <button id="replayBtn" class="btn">REPLAY</button>
+      
+      <div id="popup">
+        <h2>GAME OVER!</h2>
+        <div id="popupText">Your Score: 0 proofs</div>
+        <button>PLAY AGAIN</button>
+      </div>
     </div>
     
-    <div id="instructions">
-      <p>Tap the falling logos to earn points!</p>
-      <p>Special characters give bonus points!</p>
-    </div>
-    
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    
-    <button id="startBtn" class="btn pulse">▶ PLAY</button>
-    <button id="replayBtn" class="btn">REPLAY</button>
-    
-    <div id="popup">
-      <h2>GAME OVER!</h2>
-      <div id="popupText">Your Score: 0 proofs</div>
-      <button>PLAY AGAIN</button>
-    </div>
-    
-    <footer>powered by melek</footer>
-    
-    <div id="soundToggle">
-      <i>🔊</i>
+    <div class="game-elements">
+      <div class="element-card">
+        <h3>Game Elements</h3>
+      </div>
+      
+      <div class="element-card">
+        <div class="preview logo-preview">
+          <img src="https://img.icons8.com/color/96/circled-l.png" alt="Logo">
+        </div>
+        <div>Logo - 1 Point</div>
+      </div>
+      
+      <div class="element-card">
+        <div class="preview char1-preview">
+          <img src="https://img.icons8.com/color/96/circled-1.png" alt="Char 1">
+        </div>
+        <div>Char 1 - 3 Points</div>
+      </div>
+      
+      <div class="element-card">
+        <div class="preview char2-preview">
+          <img src="https://img.icons8.com/color/96/circled-2.png" alt="Char 2">
+        </div>
+        <div>Char 2 - 5 Points</div>
+      </div>
+      
+      <div id="soundToggle">🔊</div>
     </div>
   </div>
+  
+  <div class="instructions">
+    <h3>How to Play:</h3>
+    <ul>
+      <li>Tap falling logos and characters to earn points</li>
+      <li>Logos are worth 1 point each</li>
+      <li>Char 1 is worth 3 points</li>
+      <li>Char 2 is worth 5 points</li>
+      <li>Game lasts for 30 seconds - get the highest score!</li>
+      <li>Make sure to enable sound for the best experience</li>
+    </ul>
+  </div>
+  
+  <footer>powered by melek</footer>
 
   <script>
     // Game elements
@@ -230,12 +373,20 @@
     const popup = document.getElementById('popup');
     const popupText = document.getElementById('popupText');
     const popupButton = popup.querySelector('button');
-    const instructions = document.getElementById('instructions');
     const soundToggle = document.getElementById('soundToggle');
     
-    // Sound elements
-    const clickSound = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAAAAAAA=');
-    const popSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+    // Set canvas dimensions
+    canvas.width = Math.min(window.innerWidth * 0.9, 700);
+    canvas.height = 500;
+    
+    // Sound effects
+    const clickSound = new Audio();
+    clickSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3";
+    clickSound.volume = 0.5;
+    
+    const popSound = new Audio();
+    popSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-game-ball-tap-2073.mp3";
+    popSound.volume = 0.3;
     
     // Game state
     let logos = [];
@@ -249,12 +400,12 @@
     
     // Create game elements
     function createLogo() {
-      const x = Math.random() * (canvas.width - 100);
+      const x = Math.random() * (canvas.width - 80);
       logos.push({ 
         x, 
-        y: -100,
-        width: 80,
-        height: 80,
+        y: -80,
+        width: 60,
+        height: 60,
         speed: 2 + Math.random() * 3,
         type: 'logo'
       });
@@ -265,10 +416,10 @@
       const type = types[Math.floor(Math.random() * types.length)];
       
       characters.push({ 
-        x: Math.random() * (canvas.width - 100),
-        y: -120,
-        width: 100,
-        height: 100,
+        x: Math.random() * (canvas.width - 80),
+        y: -80,
+        width: 70,
+        height: 70,
         speed: 1.5 + Math.random() * 2,
         type: type
       });
@@ -291,34 +442,40 @@
     
     // Draw game elements
     function drawLogo(logo) {
+      // Draw logo image
       ctx.fillStyle = '#ff66c4';
       ctx.beginPath();
-      ctx.roundRect(logo.x, logo.y, logo.width, logo.height, 15);
+      ctx.roundRect(logo.x, logo.y, logo.width, logo.height, 10);
       ctx.fill();
       
       ctx.fillStyle = 'white';
-      ctx.font = 'bold 20px Arial';
+      ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('LOGO', logo.x + logo.width/2, logo.y + logo.height/2);
     }
     
     function drawCharacter(char) {
-      const colors = {
-        char1: '#6a0dad',
-        char2: '#00aaff'
-      };
+      let color, text;
       
-      ctx.fillStyle = colors[char.type];
+      if (char.type === 'char1') {
+        color = '#6a0dad';
+        text = 'CHAR 1';
+      } else {
+        color = '#00aaff';
+        text = 'CHAR 2';
+      }
+      
+      ctx.fillStyle = color;
       ctx.beginPath();
       ctx.arc(char.x + char.width/2, char.y + char.height/2, char.width/2, 0, Math.PI * 2);
       ctx.fill();
       
       ctx.fillStyle = 'white';
-      ctx.font = 'bold 24px Arial';
+      ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(char.type === 'char1' ? 'CHAR 1' : 'CHAR 2', char.x + char.width/2, char.y + char.height/2);
+      ctx.fillText(text, char.x + char.width/2, char.y + char.height/2);
     }
     
     function drawParticles() {
@@ -396,7 +553,10 @@
           scoreElement.textContent = score;
           logos.splice(i, 1);
           createParticles(clickX, clickY, '#ff66c4');
-          if (soundEnabled) popSound.play();
+          if (soundEnabled) {
+            popSound.currentTime = 0;
+            popSound.play().catch(e => console.log("Audio play error:", e));
+          }
           return;
         }
       }
@@ -413,7 +573,10 @@
           scoreElement.textContent = score;
           characters.splice(i, 1);
           createParticles(clickX, clickY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
-          if (soundEnabled) popSound.play();
+          if (soundEnabled) {
+            popSound.currentTime = 0;
+            popSound.play().catch(e => console.log("Audio play error:", e));
+          }
           return;
         }
       }
@@ -428,21 +591,23 @@
       timeLeft = 30;
       scoreElement.textContent = score;
       timeElement.textContent = timeLeft;
-      document.getElementById('scoreboard').style.display = 'flex';
       popup.style.display = 'none';
     }
     
     function startGame() {
-      if (soundEnabled) clickSound.play();
+      if (soundEnabled) {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.log("Audio play error:", e));
+      }
+      
       gameRunning = true;
       resetGame();
       startBtn.style.display = 'none';
       replayBtn.style.display = 'none';
-      instructions.style.display = 'block';
       
       // Start game timers
-      spawnInterval = setInterval(createLogo, 600);
-      charSpawnInterval = setInterval(spawnCharacter, 2500);
+      spawnInterval = setInterval(createLogo, 500);
+      charSpawnInterval = setInterval(spawnCharacter, 1500);
       
       gameTimer = setInterval(() => {
         timeLeft--;
@@ -465,7 +630,6 @@
       popupText.textContent = `You scored ${score} proofs!`;
       popup.style.display = 'block';
       replayBtn.style.display = 'block';
-      instructions.style.display = 'none';
     }
     
     // Event listeners
@@ -475,20 +639,21 @@
     
     soundToggle.addEventListener('click', () => {
       soundEnabled = !soundEnabled;
-      soundToggle.querySelector('i').textContent = soundEnabled ? '🔊' : '🔇';
+      soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+      
+      // Play a sound when toggling
+      if (soundEnabled) {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.log("Audio play error:", e));
+      }
     });
     
     // Handle canvas resizing
     function resizeCanvas() {
-      canvas.width = Math.min(window.innerWidth - 40, 800);
-      canvas.height = Math.min(window.innerHeight - 150, 600);
+      canvas.width = Math.min(window.innerWidth * 0.9, 700);
     }
     
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    
-    // Initialize the game
-    resetGame();
     
     // Add a subtle background animation
     function backgroundAnimation() {
@@ -513,6 +678,9 @@
     }
     
     backgroundAnimation();
+    
+    // Initialize the game
+    resetGame();
   </script>
 </body>
 </html>
