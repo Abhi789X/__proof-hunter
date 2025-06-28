@@ -136,14 +136,6 @@
       100% { transform: scale(1); }
     }
     
-    .particle {
-      position: absolute;
-      background: rgba(255, 102, 196, 0.8);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 5;
-    }
-    
     #footer {
       position: absolute;
       bottom: 10px;
@@ -155,24 +147,43 @@
       text-align: center;
     }
     
-    .tap-indicator {
+    .bubble {
       position: absolute;
-      width: 60px;
-      height: 60px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
       pointer-events: none;
       z-index: 15;
-      animation: tapEffect 0.6s forwards;
+      background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+      animation: bubbleEffect 1s forwards;
     }
     
-    @keyframes tapEffect {
+    @keyframes bubbleEffect {
       0% { 
-        transform: scale(0.2);
+        transform: scale(0.1);
         opacity: 0.8;
       }
       100% { 
         transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(255, 102, 196, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5;
+      animation: particleFloat 1s forwards;
+    }
+    
+    @keyframes particleFloat {
+      0% { 
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+      100% { 
+        transform: translate(var(--tx), var(--ty));
         opacity: 0;
       }
     }
@@ -345,11 +356,11 @@
     let spawnInterval, gameTimer, charSpawnInterval;
     let particles = [];
     
-    // Create game elements with 20% reduced speed
+    // Create game elements with 20% reduced speed and 20% larger size
     function createLogo() {
       const logoAsset = assets.find(a => a.id === 'logo');
-      const width = 60;
-      const height = 60;
+      const width = 72; // 20% larger (60 * 1.2)
+      const height = 72; // 20% larger (60 * 1.2)
       
       logos.push({ 
         x: Math.random() * (canvas.width - width),
@@ -372,10 +383,11 @@
       ];
       const charType = types[Math.floor(Math.random() * types.length)];
       
-      // Make char2 30% larger
+      // Make char2 30% larger and then add 20% to all
       const isChar2 = charType.type === 'char2';
-      const width = isChar2 ? 90 : 70; // 30% larger
-      const height = isChar2 ? 90 : 70; // 30% larger
+      const baseSize = isChar2 ? 90 : 70;
+      const width = baseSize * 1.2; // 20% larger
+      const height = baseSize * 1.2; // 20% larger
       
       characters.push({ 
         x: Math.random() * (canvas.width - width),
@@ -389,32 +401,45 @@
       });
     }
     
+    // Create bubble effects for taps
+    function createBubbleEffect(x, y, color) {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.style.left = (x - 30) + 'px';
+      bubble.style.top = (y - 30) + 'px';
+      bubble.style.width = '60px';
+      bubble.style.height = '60px';
+      bubble.style.background = `radial-gradient(circle, ${color} 0%, rgba(255,255,255,0) 70%)`;
+      document.body.appendChild(bubble);
+      
+      setTimeout(() => {
+        bubble.remove();
+      }, 1000);
+    }
+    
     // Create particles for effects
     function createParticles(x, y, color, count = 15) {
       for (let i = 0; i < count; i++) {
-        particles.push({
-          x,
-          y,
-          size: 3 + Math.random() * 8,
-          speedX: -3 + Math.random() * 6,
-          speedY: -3 + Math.random() * 6,
-          color,
-          life: 20 + Math.random() * 30
-        });
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 4;
+        const tx = Math.cos(angle) * speed * 50;
+        const ty = Math.sin(angle) * speed * 50;
+        
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = (x - 5) + 'px';
+        particle.style.top = (y - 5) + 'px';
+        particle.style.width = '10px';
+        particle.style.height = '10px';
+        particle.style.backgroundColor = color;
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+          particle.remove();
+        }, 1000);
       }
-    }
-    
-    // Create tap indicator effect for smoother tapping
-    function createTapEffect(x, y) {
-      const effect = document.createElement('div');
-      effect.className = 'tap-indicator';
-      effect.style.left = (x - 30) + 'px';
-      effect.style.top = (y - 30) + 'px';
-      document.body.appendChild(effect);
-      
-      setTimeout(() => {
-        effect.remove();
-      }, 600);
     }
     
     // Draw game elements
@@ -425,8 +450,14 @@
         // Fallback if image not loaded
         ctx.fillStyle = '#ff66c4';
         ctx.beginPath();
-        ctx.roundRect(logo.x, logo.y, logo.width, logo.height, 10);
+        ctx.roundRect(logo.x, logo.y, logo.width, logo.height, 15);
         ctx.fill();
+        
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 18px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('LOGO', logo.x + logo.width/2, logo.y + logo.height/2);
       }
     }
     
@@ -441,30 +472,25 @@
         } else {
           color = '#00aaff';
         }
-        ctx.fillStyle = color;
+        
+        // Draw character with smooth edges
         ctx.beginPath();
         ctx.arc(char.x + char.width/2, char.y + char.height/2, char.width/2, 0, Math.PI * 2);
+        ctx.fillStyle = color;
         ctx.fill();
-      }
-    }
-    
-    function drawParticles() {
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
         
-        ctx.fillStyle = p.color;
+        // Add shine effect
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.arc(char.x + char.width/3, char.y + char.height/3, char.width/6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
         ctx.fill();
         
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.life--;
-        p.size *= 0.97;
-        
-        if (p.life <= 0) {
-          particles.splice(i, 1);
-        }
+        // Draw character text
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 22px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(char.type === 'char1' ? 'CHAR 1' : 'CHAR 2', char.x + char.width/2, char.y + char.height/2);
       }
     }
     
@@ -500,9 +526,6 @@
         }
       }
       
-      // Draw particles
-      drawParticles();
-      
       requestAnimationFrame(update);
     }
     
@@ -514,15 +537,14 @@
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
       
-      // Create tap effect for visual feedback
-      createTapEffect(e.clientX, e.clientY);
-      
       // Play sound effect
       const popAsset = assets.find(a => a.id === 'pop');
       if (popAsset.element) {
         popAsset.element.currentTime = 0;
         popAsset.element.play().catch(e => console.log("Audio error"));
       }
+      
+      let tapped = false;
       
       // Check logo taps
       for (let i = logos.length - 1; i >= 0; i--) {
@@ -532,10 +554,14 @@
           score += 1;
           scoreElement.textContent = score;
           logos.splice(i, 1);
-          createParticles(clickX, clickY, '#ff66c4');
-          return;
+          createBubbleEffect(e.clientX, e.clientY, '#ff66c4');
+          createParticles(e.clientX, e.clientY, '#ff66c4');
+          tapped = true;
+          break;
         }
       }
+      
+      if (tapped) return;
       
       // Check character taps with circular hit detection for smoother experience
       for (let i = characters.length - 1; i >= 0; i--) {
@@ -549,8 +575,13 @@
           score += char.points;
           scoreElement.textContent = score;
           characters.splice(i, 1);
-          createParticles(clickX, clickY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
-          return;
+          
+          // Create beautiful bubble effect
+          createBubbleEffect(e.clientX, e.clientY, char.type === 'char1' ? '#6a0dad' : '#00aaff');
+          
+          // Create particles
+          createParticles(e.clientX, e.clientY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
+          break;
         }
       }
     }
@@ -566,7 +597,6 @@
     function resetGame() {
       logos = [];
       characters = [];
-      particles = [];
       score = 0;
       timeLeft = 30;
       scoreElement.textContent = score;
