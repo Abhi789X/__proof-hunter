@@ -17,44 +17,13 @@
       min-height: 100vh;
       overflow: hidden;
       color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    
-    .container {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 10px;
-      z-index: 10;
-    }
-    
-    h1 {
-      font-size: 32px;
-      margin-bottom: 5px;
-      background: linear-gradient(to right, #ff66c4, #ff9a8b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 10px rgba(255, 102, 196, 0.5);
-    }
-    
-    .subtitle {
-      font-size: 16px;
-      color: #c0a3d9;
-      max-width: 600px;
-      line-height: 1.4;
-      margin: 0 auto;
-      display: none;
     }
     
     #scoreboard {
-      width: 100%;
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
       background: rgba(255, 102, 196, 0.15);
       border-radius: 15px;
       padding: 12px 25px;
@@ -63,48 +32,49 @@
       z-index: 10;
       display: flex;
       justify-content: space-between;
+      gap: 30px;
       backdrop-filter: blur(5px);
       border: 2px solid rgba(255, 102, 196, 0.3);
       box-shadow: 0 0 15px rgba(255, 102, 196, 0.2);
-      margin: 0 auto 15px;
     }
     
     canvas {
       display: block;
       background: rgba(0, 0, 0, 0.1);
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-      width: 100%;
-      height: 500px;
-      margin: 0 auto;
+      width: 100vw;
+      height: 100vh;
     }
     
-    .controls {
+    #controls {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      z-index: 20;
     }
     
     .btn {
-      padding: 14px 35px;
-      font-size: 18px;
+      padding: 18px 45px;
+      font-size: 22px;
       font-weight: bold;
       background: linear-gradient(135deg, #ff66c4, #ff2a9e);
       border: none;
       color: white;
       cursor: pointer;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(255, 102, 196, 0.5);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 102, 196, 0.5);
       transition: all 0.3s ease;
-      z-index: 20;
+      min-width: 200px;
       text-align: center;
-      min-width: 140px;
     }
     
     .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 102, 196, 0.8);
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(255, 102, 196, 0.8);
     }
     
     #replayBtn {
@@ -118,15 +88,15 @@
       transform: translate(-50%, -50%);
       background: linear-gradient(135deg, #ff66c4, #ff2a9e);
       color: white;
-      padding: 30px;
-      border-radius: 18px;
-      font-size: 22px;
+      padding: 40px;
+      border-radius: 20px;
+      font-size: 24px;
       text-align: center;
       display: none;
       z-index: 100;
       width: 90%;
-      max-width: 450px;
-      box-shadow: 0 0 30px rgba(255, 102, 196, 0.8);
+      max-width: 500px;
+      box-shadow: 0 0 40px rgba(255, 102, 196, 0.8);
       backdrop-filter: blur(10px);
     }
     
@@ -138,20 +108,20 @@
     
     #popup button {
       margin-top: 25px;
-      padding: 12px 35px;
-      font-size: 18px;
+      padding: 15px 40px;
+      font-size: 20px;
       font-weight: bold;
       background: white;
       color: #ff2a9e;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     
     #popup button:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     }
     
     .pulse {
@@ -172,97 +142,60 @@
       z-index: 5;
     }
     
-    #soundToggle {
+    #footer {
       position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 45px;
-      height: 45px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 100;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      font-size: 22px;
-    }
-    
-    .instructions {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      padding: 15px;
-      margin-top: 20px;
-      max-width: 700px;
-      backdrop-filter: blur(5px);
-      margin: 20px auto 0;
-      display: none;
-    }
-    
-    footer {
-      width: 100%;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 14px;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
       z-index: 10;
-      margin-top: 20px;
-      padding: 10px;
-      display: none;
+      text-align: center;
     }
     
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 28px;
+    .tap-indicator {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      pointer-events: none;
+      z-index: 15;
+      animation: tapEffect 0.6s forwards;
+    }
+    
+    @keyframes tapEffect {
+      0% { 
+        transform: scale(0.2);
+        opacity: 0.8;
       }
-      
-      #scoreboard {
-        font-size: 18px;
-        padding: 10px 15px;
-      }
-      
-      canvas {
-        height: 400px;
-      }
-      
-      .btn {
-        padding: 12px 25px;
-        font-size: 16px;
-        min-width: 120px;
+      100% { 
+        transform: scale(1.5);
+        opacity: 0;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>TAP TO PROVE</h1>
-      <div class="subtitle">Tap the falling images to score points!</div>
-    </div>
-    
-    <div id="scoreboard">
-      <div>Score: <span id="score">0</span></div>
-      <div>Time: <span id="time">30</span>s</div>
-    </div>
-    
-    <canvas id="gameCanvas"></canvas>
-    
-    <div class="controls">
-      <button id="startBtn" class="btn pulse">▶ PLAY</button>
-      <button id="replayBtn" class="btn">REPLAY</button>
-    </div>
-    
-    <div id="popup">
-      <h2>GAME OVER!</h2>
-      <div id="popupText">Score: 0 proofs</div>
-      <button>PLAY AGAIN</button>
-    </div>
-    
-    <div id="soundToggle">🔊</div>
-    
-    <footer>powered by melek</footer>
+  <div id="scoreboard">
+    <div>Score: <span id="score">0</span></div>
+    <div>Time: <span id="time">30</span>s</div>
   </div>
+  
+  <canvas id="gameCanvas"></canvas>
+  
+  <div id="controls">
+    <button id="startBtn" class="btn pulse">▶ PLAY</button>
+    <button id="replayBtn" class="btn">REPLAY</button>
+  </div>
+  
+  <div id="popup">
+    <h2>GAME OVER!</h2>
+    <div id="popupText">Score: 0 proofs</div>
+    <button>PLAY AGAIN</button>
+  </div>
+  
+  <div id="footer">powered by melek</div>
 
   <script>
     // Game elements
@@ -275,30 +208,29 @@
     const popup = document.getElementById('popup');
     const popupText = document.getElementById('popupText');
     const popupButton = popup.querySelector('button');
-    const soundToggle = document.getElementById('soundToggle');
-    const subtitle = document.querySelector('.subtitle');
-    const footer = document.querySelector('footer');
     
-    // Set canvas dimensions
-    canvas.width = Math.min(window.innerWidth * 0.95, 700);
-    canvas.height = 500;
+    // Set canvas to full screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     
-    // Load images - REPLACE THESE WITH YOUR ACTUAL PNG FILES
+    // Image placeholders (replace with your actual images)
     const logoImg = new Image();
-    logoImg.src = 'logo.png'; // Your logo.png path
+    logoImg.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23ff66c4" rx="15"/><text x="50" y="55" font-family="Arial" font-size="24" fill="white" text-anchor="middle">LOGO</text></svg>';
     
     const char1Img = new Image();
-    char1Img.src = 'char1.png'; // Your char1.png path
+    char1Img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%236a0dad"/><text x="50" y="55" font-family="Arial" font-size="24" fill="white" text-anchor="middle">CHAR1</text></svg>';
     
     const char2Img = new Image();
-    char2Img.src = 'char2.png'; // Your char2.png path
+    char2Img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%2300aaff"/><text x="50" y="55" font-family="Arial" font-size="24" fill="white" text-anchor="middle">CHAR2</text></svg>';
     
-    // Sound effects - REPLACE WITH YOUR ACTUAL SOUND FILES
+    // Sound effects
     const clickSound = new Audio();
-    clickSound.src = "click.wav"; // Your click.wav path
+    clickSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3";
+    clickSound.volume = 0.5;
     
     const popSound = new Audio();
-    popSound.src = "pop.mp3"; // Your pop.mp3 path
+    popSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-game-ball-tap-2073.mp3";
+    popSound.volume = 0.3;
     
     // Game state
     let logos = [];
@@ -307,10 +239,9 @@
     let timeLeft = 30;
     let gameRunning = false;
     let spawnInterval, gameTimer, charSpawnInterval;
-    let soundEnabled = true;
     let particles = [];
     
-    // Create game elements
+    // Create game elements with 20% reduced speed
     function createLogo() {
       const x = Math.random() * (canvas.width - 60);
       logos.push({ 
@@ -318,7 +249,7 @@
         y: -60,
         width: 60,
         height: 60,
-        speed: 2 + Math.random() * 3,
+        speed: (2 + Math.random() * 3) * 0.8, // 20% slower
         type: 'logo',
         img: logoImg
       });
@@ -336,7 +267,7 @@
         y: -70,
         width: 70,
         height: 70,
-        speed: 1.5 + Math.random() * 2,
+        speed: (1.5 + Math.random() * 2) * 0.8, // 20% slower
         type: charType.type,
         img: charType.img,
         points: charType.points
@@ -356,6 +287,19 @@
           life: 20 + Math.random() * 30
         });
       }
+    }
+    
+    // Create tap indicator effect
+    function createTapEffect(x, y) {
+      const effect = document.createElement('div');
+      effect.className = 'tap-indicator';
+      effect.style.left = (x - 30) + 'px';
+      effect.style.top = (y - 30) + 'px';
+      document.body.appendChild(effect);
+      
+      setTimeout(() => {
+        effect.remove();
+      }, 600);
     }
     
     // Draw game elements
@@ -447,7 +391,7 @@
       requestAnimationFrame(update);
     }
     
-    // Handle clicks
+    // Handle taps
     canvas.addEventListener('click', function(e) {
       if (!gameRunning) return;
       
@@ -455,7 +399,10 @@
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
       
-      // Check logo clicks
+      // Create tap effect
+      createTapEffect(e.clientX, e.clientY);
+      
+      // Check logo taps
       for (let i = logos.length - 1; i >= 0; i--) {
         const logo = logos[i];
         if (clickX >= logo.x && clickX <= logo.x + logo.width &&
@@ -464,27 +411,25 @@
           scoreElement.textContent = score;
           logos.splice(i, 1);
           createParticles(clickX, clickY, '#ff66c4');
-          if (soundEnabled) {
-            popSound.currentTime = 0;
-            try { popSound.play(); } catch (e) { console.log("Audio error:", e); }
-          }
+          try { popSound.currentTime = 0; popSound.play(); } catch (e) {}
           return;
         }
       }
       
-      // Check character clicks
+      // Check character taps with circular hit detection
       for (let i = characters.length - 1; i >= 0; i--) {
         const char = characters[i];
-        if (clickX >= char.x && clickX <= char.x + char.width &&
-            clickY >= char.y && clickY <= char.y + char.height) {
+        const centerX = char.x + char.width/2;
+        const centerY = char.y + char.height/2;
+        const distance = Math.sqrt((clickX - centerX)**2 + (clickY - centerY)**2);
+        const radius = Math.min(char.width, char.height) * 0.4;
+        
+        if (distance <= radius) {
           score += char.points;
           scoreElement.textContent = score;
           characters.splice(i, 1);
           createParticles(clickX, clickY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
-          if (soundEnabled) {
-            popSound.currentTime = 0;
-            try { popSound.play(); } catch (e) { console.log("Audio error:", e); }
-          }
+          try { popSound.currentTime = 0; popSound.play(); } catch (e) {}
           return;
         }
       }
@@ -502,21 +447,14 @@
       popup.style.display = 'none';
       replayBtn.style.display = 'none';
       startBtn.style.display = 'block';
-      subtitle.style.display = 'none';
-      footer.style.display = 'none';
     }
     
     function startGame() {
-      if (soundEnabled) {
-        clickSound.currentTime = 0;
-        try { clickSound.play(); } catch (e) { console.log("Audio error:", e); }
-      }
+      try { clickSound.currentTime = 0; clickSound.play(); } catch (e) {}
       
       gameRunning = true;
       resetGame();
       startBtn.style.display = 'none';
-      subtitle.style.display = 'block';
-      footer.style.display = 'block';
       
       // Start game timers
       spawnInterval = setInterval(createLogo, 500);
@@ -543,7 +481,6 @@
       popupText.textContent = `Score: ${score} proofs!`;
       popup.style.display = 'block';
       replayBtn.style.display = 'block';
-      subtitle.style.display = 'none';
     }
     
     // Event listeners
@@ -551,23 +488,11 @@
     replayBtn.addEventListener('click', startGame);
     popupButton.addEventListener('click', startGame);
     
-    soundToggle.addEventListener('click', () => {
-      soundEnabled = !soundEnabled;
-      soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
-      
-      // Play a sound when toggling
-      if (soundEnabled) {
-        clickSound.currentTime = 0;
-        try { clickSound.play(); } catch (e) { console.log("Audio error:", e); }
-      }
-    });
-    
     // Handle canvas resizing
-    function resizeCanvas() {
-      canvas.width = Math.min(window.innerWidth * 0.95, 700);
-    }
-    
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
     
     // Initialize the game
     resetGame();
