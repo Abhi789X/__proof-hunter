@@ -10,6 +10,7 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
     }
     
     body {
@@ -196,7 +197,7 @@
   </div>
   
   <div id="footer">powered by melek</div>
-
+  
   <script>
     // Game elements
     const canvas = document.getElementById('gameCanvas');
@@ -210,27 +211,30 @@
     const popupButton = popup.querySelector('button');
     
     // Set canvas to full screen
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
     
-    // Image placeholders (replace with your actual images)
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Load your external PNG files
     const logoImg = new Image();
-    logoImg.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23ff66c4" rx="15"/><text x="50" y="55" font-family="Arial" font-size="24" fill="white" text-anchor="middle">LOGO</text></svg>';
+    logoImg.src = 'logo.png'; // Your logo.png
     
     const char1Img = new Image();
-    char1Img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%236a0dad"/><text x="50" y="55" font-family="Arial" font-size="24" fill="white" text-anchor="middle">CHAR1</text></svg>';
+    char1Img.src = 'char1.png'; // Your char1.png
     
     const char2Img = new Image();
-    char2Img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%2300aaff"/><text x="50" y="55" font-family="Arial" font-size="24" fill="white" text-anchor="middle">CHAR2</text></svg>';
+    char2Img.src = 'char2.png'; // Your char2.png
     
-    // Sound effects
+    // Load your external sound files
     const clickSound = new Audio();
-    clickSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3";
-    clickSound.volume = 0.5;
+    clickSound.src = 'click.wav'; // Your click.wav
     
     const popSound = new Audio();
-    popSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-game-ball-tap-2073.mp3";
-    popSound.volume = 0.3;
+    popSound.src = 'pop.mp3'; // Your pop.mp3
     
     // Game state
     let logos = [];
@@ -262,11 +266,16 @@
       ];
       const charType = types[Math.floor(Math.random() * types.length)];
       
+      // Make char2 30% larger
+      const isChar2 = charType.type === 'char2';
+      const width = isChar2 ? 90 : 70; // 30% larger
+      const height = isChar2 ? 90 : 70; // 30% larger
+      
       characters.push({ 
-        x: Math.random() * (canvas.width - 70),
-        y: -70,
-        width: 70,
-        height: 70,
+        x: Math.random() * (canvas.width - width),
+        y: -height,
+        width: width,
+        height: height,
         speed: (1.5 + Math.random() * 2) * 0.8, // 20% slower
         type: charType.type,
         img: charType.img,
@@ -289,7 +298,7 @@
       }
     }
     
-    // Create tap indicator effect
+    // Create tap indicator effect for smoother tapping
     function createTapEffect(x, y) {
       const effect = document.createElement('div');
       effect.className = 'tap-indicator';
@@ -304,7 +313,7 @@
     
     // Draw game elements
     function drawLogo(logo) {
-      if (logo.img.complete) {
+      if (logo.img.complete && logo.img.naturalWidth !== 0) {
         ctx.drawImage(logo.img, logo.x, logo.y, logo.width, logo.height);
       } else {
         // Fallback if image not loaded
@@ -316,7 +325,7 @@
     }
     
     function drawCharacter(char) {
-      if (char.img.complete) {
+      if (char.img.complete && char.img.naturalWidth !== 0) {
         ctx.drawImage(char.img, char.x, char.y, char.width, char.height);
       } else {
         // Fallback if image not loaded
@@ -391,15 +400,15 @@
       requestAnimationFrame(update);
     }
     
-    // Handle taps
-    canvas.addEventListener('click', function(e) {
+    // Handle taps with improved smoothness
+    function handleTap(e) {
       if (!gameRunning) return;
       
       const rect = canvas.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
       
-      // Create tap effect
+      // Create tap effect for visual feedback
       createTapEffect(e.clientX, e.clientY);
       
       // Check logo taps
@@ -411,12 +420,13 @@
           scoreElement.textContent = score;
           logos.splice(i, 1);
           createParticles(clickX, clickY, '#ff66c4');
-          try { popSound.currentTime = 0; popSound.play(); } catch (e) {}
+          popSound.currentTime = 0;
+          popSound.play().catch(e => console.log("Audio error"));
           return;
         }
       }
       
-      // Check character taps with circular hit detection
+      // Check character taps with circular hit detection for smoother experience
       for (let i = characters.length - 1; i >= 0; i--) {
         const char = characters[i];
         const centerX = char.x + char.width/2;
@@ -429,11 +439,19 @@
           scoreElement.textContent = score;
           characters.splice(i, 1);
           createParticles(clickX, clickY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
-          try { popSound.currentTime = 0; popSound.play(); } catch (e) {}
+          popSound.currentTime = 0;
+          popSound.play().catch(e => console.log("Audio error"));
           return;
         }
       }
-    });
+    }
+    
+    // Add multiple event listeners for smoother tapping
+    canvas.addEventListener('click', handleTap);
+    canvas.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      handleTap(e.touches[0]);
+    }, { passive: false });
     
     // Game control functions
     function resetGame() {
@@ -450,7 +468,8 @@
     }
     
     function startGame() {
-      try { clickSound.currentTime = 0; clickSound.play(); } catch (e) {}
+      clickSound.currentTime = 0;
+      clickSound.play().catch(e => console.log("Audio error"));
       
       gameRunning = true;
       resetGame();
@@ -487,12 +506,6 @@
     startBtn.addEventListener('click', startGame);
     replayBtn.addEventListener('click', startGame);
     popupButton.addEventListener('click', startGame);
-    
-    // Handle canvas resizing
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
     
     // Initialize the game
     resetGame();
