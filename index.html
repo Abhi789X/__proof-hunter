@@ -26,56 +26,55 @@
     .container {
       position: relative;
       width: 100%;
-      max-width: 900px;
+      max-width: 800px;
     }
     
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       z-index: 10;
     }
     
     h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
+      font-size: 32px;
+      margin-bottom: 5px;
       background: linear-gradient(to right, #ff66c4, #ff9a8b);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 15px rgba(255, 102, 196, 0.5);
+      text-shadow: 0 0 10px rgba(255, 102, 196, 0.5);
     }
     
     .subtitle {
-      font-size: 18px;
+      font-size: 16px;
       color: #c0a3d9;
       max-width: 600px;
-      line-height: 1.6;
+      line-height: 1.4;
       margin: 0 auto;
+      display: none;
     }
     
     #scoreboard {
       width: 100%;
-      max-width: 700px;
       background: rgba(255, 102, 196, 0.15);
-      border-radius: 20px;
-      padding: 15px 30px;
-      font-size: 24px;
+      border-radius: 15px;
+      padding: 12px 25px;
+      font-size: 20px;
       text-align: center;
       z-index: 10;
       display: flex;
       justify-content: space-between;
       backdrop-filter: blur(5px);
       border: 2px solid rgba(255, 102, 196, 0.3);
-      box-shadow: 0 0 20px rgba(255, 102, 196, 0.2);
-      margin: 0 auto 20px;
+      box-shadow: 0 0 15px rgba(255, 102, 196, 0.2);
+      margin: 0 auto 15px;
     }
     
     canvas {
       display: block;
       background: rgba(0, 0, 0, 0.1);
       border-radius: 15px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
       width: 100%;
-      max-width: 700px;
       height: 500px;
       margin: 0 auto;
     }
@@ -83,28 +82,29 @@
     .controls {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      margin-top: 30px;
+      gap: 15px;
+      margin-top: 20px;
     }
     
     .btn {
-      padding: 15px 40px;
-      font-size: 20px;
+      padding: 14px 35px;
+      font-size: 18px;
       font-weight: bold;
       background: linear-gradient(135deg, #ff66c4, #ff2a9e);
       border: none;
       color: white;
       cursor: pointer;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(255, 102, 196, 0.5);
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(255, 102, 196, 0.5);
       transition: all 0.3s ease;
       z-index: 20;
       text-align: center;
+      min-width: 140px;
     }
     
     .btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(255, 102, 196, 0.8);
+      box-shadow: 0 0 20px rgba(255, 102, 196, 0.8);
     }
     
     #replayBtn {
@@ -118,40 +118,40 @@
       transform: translate(-50%, -50%);
       background: linear-gradient(135deg, #ff66c4, #ff2a9e);
       color: white;
-      padding: 40px;
-      border-radius: 20px;
-      font-size: 26px;
+      padding: 30px;
+      border-radius: 18px;
+      font-size: 22px;
       text-align: center;
       display: none;
       z-index: 100;
       width: 90%;
-      max-width: 500px;
-      box-shadow: 0 0 40px rgba(255, 102, 196, 0.8);
+      max-width: 450px;
+      box-shadow: 0 0 30px rgba(255, 102, 196, 0.8);
       backdrop-filter: blur(10px);
     }
     
     #popup h2 {
-      font-size: 42px;
-      margin-bottom: 20px;
+      font-size: 36px;
+      margin-bottom: 15px;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     #popup button {
-      margin-top: 30px;
-      padding: 15px 40px;
-      font-size: 20px;
+      margin-top: 25px;
+      padding: 12px 35px;
+      font-size: 18px;
       font-weight: bold;
       background: white;
       color: #ff2a9e;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     
     #popup button:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
     }
     
     .pulse {
@@ -174,10 +174,10 @@
     
     #soundToggle {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
+      top: 15px;
+      right: 15px;
+      width: 45px;
+      height: 45px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       display: flex;
@@ -187,81 +187,49 @@
       z-index: 100;
       backdrop-filter: blur(5px);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      font-size: 24px;
+      font-size: 22px;
     }
     
     .instructions {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 15px;
-      padding: 20px;
-      margin-top: 30px;
+      padding: 15px;
+      margin-top: 20px;
       max-width: 700px;
       backdrop-filter: blur(5px);
-      margin: 30px auto 0;
-    }
-    
-    .instructions h3 {
-      color: #ff66c4;
-      margin-bottom: 15px;
-      font-size: 24px;
-      text-align: center;
-    }
-    
-    .instructions ul {
-      padding-left: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 15px;
-    }
-    
-    .instructions li {
-      margin-bottom: 10px;
-      line-height: 1.5;
-      font-size: 18px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 10px 20px;
-      border-radius: 10px;
-      min-width: 250px;
-    }
-    
-    .element-preview {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 10px;
-    }
-    
-    .element-preview img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
+      margin: 20px auto 0;
+      display: none;
     }
     
     footer {
       width: 100%;
       text-align: center;
       color: rgba(255, 255, 255, 0.6);
-      font-size: 16px;
+      font-size: 14px;
       z-index: 10;
-      margin-top: 30px;
+      margin-top: 20px;
       padding: 10px;
+      display: none;
     }
     
     @media (max-width: 768px) {
-      .controls {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .btn {
-        width: 80%;
+      h1 {
+        font-size: 28px;
       }
       
       #scoreboard {
-        font-size: 20px;
-        padding: 10px 20px;
+        font-size: 18px;
+        padding: 10px 15px;
+      }
+      
+      canvas {
+        height: 400px;
+      }
+      
+      .btn {
+        padding: 12px 25px;
+        font-size: 16px;
+        min-width: 120px;
       }
     }
   </style>
@@ -270,7 +238,7 @@
   <div class="container">
     <div class="header">
       <h1>TAP TO PROVE</h1>
-      <div class="subtitle">Tap the falling PNG images to earn points before time runs out!</div>
+      <div class="subtitle">Tap the falling images to score points!</div>
     </div>
     
     <div id="scoreboard">
@@ -287,32 +255,8 @@
     
     <div id="popup">
       <h2>GAME OVER!</h2>
-      <div id="popupText">Your Score: 0 proofs</div>
+      <div id="popupText">Score: 0 proofs</div>
       <button>PLAY AGAIN</button>
-    </div>
-    
-    <div class="instructions">
-      <h3>How to Play:</h3>
-      <ul>
-        <li>
-          <div class="element-preview">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABhElEQVRYw+2WwWrCQBCGZxNCwEMIeCghhBwKpYdC6aH0UHooPZQeSg+lh9JD6aH0UHooPQQRRA4iIoiIiIiIyGZnjFmI2d1sNhGfwwfD7M7sfP8/MywTQvxXAQHdIuAN+AF+gT/gH/gI/gKfwW/w/xwRAZ9iYBcYAj/ABpgDC2AKTIAxMAJGwDfwBXwCn8AH8A68AS/AE9AHHkLgEfAKbIElsAKWwAL4BubADJgCU2ACTIAxMAZGwAgYAkNgALwDfeANeAVegGfgCXgEHoB74A64BW6AG+BLwJ9A4A1wDdwB98Aj8AwMgDfgFXgBnoEn4BF4AB6Ae+AOuAVugBvgGrgGroAr4BK4AM6Bc+AMOAVOgBPgGDgCDoFD4AA4APaBfWAP2AV2gB1gG9gCNoENYB1YA9aAVWAFWAaWgCVgEVgA5oF5YA6YA2aBGWAGmAamgClgEpgAJoBxYAwYBcaAEWAIGAS+gd8/4Df4Dn6AD+AH+AI+gU/gA/gA3oF34A14BV6AF+AZeAKegEfgAXgA7oF74Ba4AW6Aa+AauASugAvgHDgDToET4Bg4Ag6BQ+AA2Af2gT1gF9gBdoBtYAvYBDaAdWANWANWgRVgGVgCloBFYAGYB+aBOWAOmAVmgBlgGpgCpoBJYAKYAMaBMWBUGAMGgUFgEBgEBoF+oB/4A76D7+AH+AB+gC/gE/gAPoB34B14A16BF+AZeAKegCfgEXgAHoB74B64BW6AG+AauASugAvgHDgDToET4Bg4Ag6BQ2Af2Af2gF1gB9gBtoEtYBPYANaBNWANWAVWgGVgCVgCFoEFYB6YB+aAOWAWmAFmgGlgCpgCJoEJYAIYB8aAUWEMGAQGgUFgEBgE+oA+4Bv4+gN+gu/gB/gAfoAv4BP4AD6Ad+AdeANegRfgGXgCnoBH4AF4AO6Be+AWuAFugGvgErgALoBz4Aw4BU6AY+AI2Af2gT1gF9gBdoBtYAvYBDaAdWANWANWgRVgGVgCloBFYAGYB+aBOWAOmAVmgBlgGpgCpoBJYAKYAMaBMWBUGAMGgUFgEBgE+oA+4Cv4+gN+gu/gB/gAfoAv4BP4AD6Ad+AdeANegRfgGXgCnoBH4AF4AO6Be+AWuAFugGvgErgAzoEz4BQ4AY6BI+AQ2Af2gT1gF9gBdoBtYAvYBDaAdWANWANWgRVgGVgCloBFYAGYB+aBOWAOmAVmgBlgGpgCpoBJYAKYAMaBMWBUGAMGgUFgEBgE+oA+4DP4+gN+gu/gB/gAfoAv4BP4AD6Ad+AdeANegRfgGXgCnoBH4AF4AO6Be+AWuAFugGvgErg4wD8BZ8ApcAIcA0fAIXAI7AP7wB6wC+wAO8A2sAVsAhvAOrAGrAGrwAqwDCwBS8AisADMA/PAnP8A+AM4OcMf7vQwUAAAAABJRU5ErkJggg==" alt="Logo">
-            <span>Logo - 1 Point</span>
-          </div>
-        </li>
-        <li>
-          <div class="element-preview">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABq0lEQVRYw+2WwWrCQBCGZxNCwEMIeCghhBwKpYdC6aH0UHooPZQeSg+lh9JD6aH0UHooPQQRRA4iIoiIiIiIyGZnjFmI2d1sNhGfwwfD7M7sfP8/MywTQvxXAQHdIuAN+AF+gT/gH/gI/gKfwW/w/xwRAZ9iYBcYAj/ABpgDC2AKTIAxMAJGwDfwBXwCn8AH8A68AC9AH3gIgUfAK7AFlkpgCSyAb2AOzIApMAUmwASYAGNgDIyAETAChsAQGADvQB94A16BF+AZeAKegEfgAbgH7oBb4Aa4Aa6BLwF/AoE3wDVwB9wDj8AzMADegFfgBXgGnoBH4AF4AO6BO+AWuAFugGvgGrgCroBL4AI4B86BM+AUOAFOgGPgCDgEDoB9YB/YA3aBHWAH2Aa2gE1gA1gH1oA1YBVYAZaBJWAJWATmgXlgDpgDZoEZYAaYBqaAKWASmAAmgHFgDBiVxoABYAAYAAaAfiAPfAO/f8Bv8B38AB/AD/AFfAIfwAfwDrwDb8Ar8AI8A0/AE/AIPAD3wD1wC9wAN8A1cAlcABfAOXAGnAKnwAlwDBwBh8AhcADsA/vAHrAL7AA7wDawBWwCG8A6sAasAavACrAMLAFLwCIwD8wDc8AcMAvMADPANDAFTAKTwAQwAYwDY8CoMgYMAAPAADAADAD9QD/wB3wH38EP8AH8AF/AJ/ABfADvwDvwBrwCL8Az8AQ8AY/AA/AA3AP3wC1wA9wA18AlcAFcAOfAGXAKnADHwBFwCBwC+8A+sAfsAjvADrANbAGbwAawDqwBa8AqsAIsA0vAErAIzAPzwBwwB8wCM8AMMA1MAVPAJDABTADjwBgwqowBg8AgMAgMAgNAP9AP/AHfwff/AX4BZ8ApcAIcA0fAIXAI7AP7wB6wC+wAO8A2sAVsAhvAOrAGrAGrwAqwDCwBS8AisADMA/PAnP8A+AM4OcMf7vQwUAAAAABJRU5ErkJggg==" alt="Char 1">
-            <span>Char 1 - 3 Points</span>
-          </div>
-        </li>
-        <li>
-          <div class="element-preview">
-            <img src="data:image/png;base64,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" alt="Char 2">
-            <span>Char 2 - 5 Points</span>
-          </div>
-        </li>
-      </ul>
     </div>
     
     <div id="soundToggle">🔊</div>
@@ -332,29 +276,29 @@
     const popupText = document.getElementById('popupText');
     const popupButton = popup.querySelector('button');
     const soundToggle = document.getElementById('soundToggle');
+    const subtitle = document.querySelector('.subtitle');
+    const footer = document.querySelector('footer');
     
     // Set canvas dimensions
-    canvas.width = Math.min(window.innerWidth * 0.9, 700);
+    canvas.width = Math.min(window.innerWidth * 0.95, 700);
     canvas.height = 500;
     
-    // Load images
+    // Load images - REPLACE THESE WITH YOUR ACTUAL PNG FILES
     const logoImg = new Image();
-    logoImg.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABhElEQVRYw+2WwWrCQBCGZxNCwEMIeCghhBwKpYdC6aH0UHooPZQeSg+lh9JD6aH0UHooPQQRRA4iIoiIiIiIyGZnjFmI2d1sNhGfwwfD7M7sfP8/MywTQvxXAQHdIuAN+AF+gT/gH/gI/gKfwW/w/xwRAZ9iYBcYAj/ABpgDC2AKTIAxMAJGwDfwBXwCn8AH8A68AC9AH3gIgUfAK7AFlkpgCSyAb2AOzIApMAUmwASYAGNgDIyAETAChsAQGADvQB94A16BF+AZeAKegEfgAbgH7oBb4Aa4Aa6BLwF/AoE3wDVwB9wDj8AzMADegFfgBXgGnoBH4AF4AO6BO+AWuAFugGvgGrgCroBL4AI4B86BM+AUOAFOgGPgCDgEDoB9YB/YA3aBHWAH2Aa2gE1gA1gH1oA1YBVYAZaBJWAJWATmgXlgDpgDZoEZYAaYBqaAKWASmAAmgHFgDBiVxoABYAAYAAaAfiAPfAO/f8Bv8B38AB/AD/AFfAIfwAfwDrwDb8Ar8AI8A0/AE/AIPAD3wD1wC9wAN8A1cAlcABfAOXAGnAKnwAlwDBwBh8AhsA/sA3vALrAD7ADbwBawCWwA68AasAasAivAMrAELAHzwDwwB8wBs8AMMANMA1PAFDAJTADjwBgwqowBg8AgMAgMAP1AP/AHfAff/wf4BZwBp8AJcAwcAYfAIbAP7AN7wC6wA+wA28AWsAlsAOvAGrAGrAIrwDKwBCwBi8A8MA/M/we+AGfAKXACHP8HHAKHwD6wD+wBu8AOsANsA1vAJrABrANrwBqwCqwAy8ASsATMA/PAHDAHzAIzwAwwDUwBU8AkMAFMAOPAGDAqjQEDwAAwAAwA/UA/8Ad8B9//A/gCzoBT4AQ4/g84BA6BfWAf2AN2gR1gB9gGtoBNYANYB9aANWAVWAGWgSVgCZgH5oE5YA6YBWaAGWAamAKmgElgApgAxoExYFQaAwaAAWAAGAD6gX7gD/gOvv8H8As4A06BE+D4P+AQOAT2gX1gD9gFdoAdYBvYAjaBDWAdWAPWgFVgBVgGloAlYB6YB+aAOWAWmAFmgGlgCpgCJoEJYAIYB8aAUWkMGAAGgAFgAOgH+oA/4Dv4/h/AL+AMOAVOgOP/gEPgENgH9oE9YBfYAXaAbWAL2AQ2gHVgDVgDVoEVYBlYApaAeWAemAPmgFlgBpgBpoEpYAqYBCaACWAcGANGpTFgABgABoABoB/oA/6A7+D7fwC/gDPgFDgBjv8DDoFDYB/YB/aAXWAH2AG2gS1gE9gA1oE1YA1YBVaAZWAJWALmgXlgDpgDZoEZYAYAAGb2Mk0q3gVjAAAAAElFTkSuQmCC';
+    logoImg.src = 'logo.png'; // Your logo.png path
     
     const char1Img = new Image();
-    char1Img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABq0lEQVRYw+2WwWrCQBCGZxNCwEMIeCghhBwKpYdC6aH0UHooPZQeSg+lh9JD6aH0UHooPQQRRA4iIoiIiIiIyGZnjFmI2d1sNhGfwwfD7M7sfP8/MywTQvxXAQHdIuAN+AF+gT/gH/gI/gKfwW/w/xwRAZ9iYBcYAj/ABpgDC2AKTIAxMAJGwDfwBXwCn8AH8A68AC9AH3gIgUfAK7AFlkpgCSyAb2AOzIApMAUmwASYAGNgDIyAETAChsAQGADvQB94A16BF+AZeAKegEfgAbgH7oBb4Aa4Aa6BLwF/AoE3wDVwB9wDj8AzMADegFfgBXgGnoBH4AF4AO6BO+AWuAFugGvgGrgCroBL4AI4B86BM+AUOAFOgGPgCDgEDoB9YB/YA3aBHWAH2Aa2gE1gA1gH1oA1YBVYAZaBJWAJWATmgXlgDpgDZoEZYAaYBqaAKWASmAAmgHFgDBiVxoABYAAYAAaAfiAPfAO/f8Bv8B38AB/AD/AFfAIfwAfwDrwDb8Ar8AI8A0/AE/AIPAD3wD1wC9wAN8A1cAlcABfAOXAGnAKnwAlwDBwBh8AhsA/sA3vALrAD7ADbwBawCWwA68AasAasAivAMrAELAHzwDwwB8wBs8AMMANMA1PAFDAJTADjwBgwqowBg8AgMAgMAP1AP/AHfAff/wf4BZwBp8AJcAwcAYfAIbAP7AN7wC6wA+wA28AWsAlsAOvAGrAGrAIrwDKwBCwBi8A8MA/M/we+AGfAKXACHP8HHAKHwD6wD+wBu8AOsANsA1vAJrABrANrwBqwCqwAy8ASsATMA/PAHDAHzAIzwAwwDUwBU8AkMAFMAOPAGDAqjQEDwAAwAAwA/UA/8Ad8B9//A/gCzoBT4AQ4/g84BA6BfWAf2AN2gR1gB9gGtoBNYANYB9aANWAVWAGWgSVgCZgH5oE5YA6YBWaAGWAamAKmgElgApgAxoExYFQaAwaAAWAAGAD6gX7gD/gOvv8H8As4A06BE+D4P+AQOAT2gX1gD9gFdoAdYBvYAjaBDWAdWAPWgFVgBVgGloAlYB6YB+aAOWAWmAFmgGlgCpgCJoEJYAIYB8aAUWkMGAAGgAFgAOgH+oE/4Dv4/h/AL+AMOAVOgOP/gEPgENgH9oE9YBfYAXaAbWAL2AQ2gHVgDVgDVoEVYBlYApaAeWAemAPmgFlgBpgBpoEpYAqYBCaACWAcGANGpTFgABgABoABoB/oB/6A7+D7fwC/gDPgFDgBjv8DDoFDYB/YB/aAXWAH2AG2gS1gE9gA1oE1YA1YBVaAZWAJWALmgXlgDpgDZoEZYAYAAGb2Mk0q3gVjAAAAAElFTkSuQmCC';
+    char1Img.src = 'char1.png'; // Your char1.png path
     
     const char2Img = new Image();
-    char2Img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB3UlEQVRYw+2WwWrCQBCGZxNCwEMIeCghhBwKpYdC6aH0UHooPZQeSg+lh9JD6aH0UHooPQQRRA4iIoiIiIiIyGZnjFmI2d1sNhGfwwfD7M7sfP8/MywTQvxXAQHdIuAN+AF+gT/gH/gI/gKfwW/w/xwRAZ9iYBcYAj/ABpgDC2AKTIAxMAJGwDfwBXwCn8AH8A68AC9AH3gIgUfAK7AFlkpgCSyAb2AOzIApMAUmwASYAGNgDIyAETAChsAQGADvQB94A16BF+AZeAKegEfgAbgH7oBb4Aa4Aa6BLwF/AoE3wDVwB9wDj8AzMADegFfgBXgGnoBH4AF4AO6BO+AWuAFugGvgGrgCroBL4AI4B86BM+AUOAFOgGPgCDgEDoB9YB/YA3aBHWAH2Aa2gE1gA1gH1oA1YBVYAZaBJWAJWATmgXlgDpgDZoEZYAaYBqaAKWASmAAmgHFgDBiVxoABYAAYAAaAfiAPfAO/f8Bv8B38AB/AD/AFfAIfwAfwDrwDb8Ar8AI8A0/AE/AIPAD3wD1wC9wAN8A1cAlcABfAOXAGnAKnwAlwDBwBh8AhsA/sA3vALrAD7ADbwBawCWwA68AasAasAivAMrAELAHzwDwwB8wBs8AMMANMA1PAFDAJTADjwBgwqowBg8AgMAgMAP1AP/AHfAff/wf4BZwBp8AJcAwcAYfAIbAP7AN7wC6wA+wA28AWsAlsAOvAGrAGrAIrwDKwBCwBi8A8MA/M/we+AGfAKXACHP8HHAKHwD6wD+wBu8AOsANsA1vAJrABrANrwBqwCqwAy8ASsATMA/PAHDAHzAIzwAwwDUwBU8AkMAFMAOPAGDAqjQEDwAAwAAwA/UA/8Ad8B9//A/gCzoBT4AQ4/g84BA6BfWAf2AN2gR1gB9gGtoBNYANYB9aANWAVWAGWgSVgCZgH5oE5YA6YBWaAGWAamAKmgElgApgAxoExYFQaAwaAAWAAGAD6gX7gD/gOvv8H8As4A06BE+D4P+AQOAT2gX1gD9gFdoAdYBvYAjaBDWAdWAPWgFVgBVgGloAlYB6YB+aAOWAWmAFmgGlgCpgCJoEJYAIYB8aAUWkMGAAGgAFgAOgH+oE/4Dv4/h/AL+AMOAVOgOP/gEPgENgH9oE9YBfYAXaAbWAL2AQ2gHVgDVgDVoEVYBlYApaAeWAemAPmgFlgBpgBpoEpYAqYBCaACWAcGANGpTFgABgABoABoB/oB/6A7+D7fwC/gDPgFDgBjv8DDoFDYB/YB/aAXWAH2AG2gS1gE9gA1oE1YA1YBVaAZWAJWALmgXlgDpgDZoEZYAYAAGb2Mk0q3gVjAAAAAElFTkSuQmCC';
+    char2Img.src = 'char2.png'; // Your char2.png path
     
-    // Sound effects
+    // Sound effects - REPLACE WITH YOUR ACTUAL SOUND FILES
     const clickSound = new Audio();
-    clickSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3";
-    clickSound.volume = 0.5;
+    clickSound.src = "click.wav"; // Your click.wav path
     
     const popSound = new Audio();
-    popSound.src = "https://assets.mixkit.co/sfx/preview/mixkit-game-ball-tap-2073.mp3";
-    popSound.volume = 0.3;
+    popSound.src = "pop.mp3"; // Your pop.mp3 path
     
     // Game state
     let logos = [];
@@ -522,7 +466,7 @@
           createParticles(clickX, clickY, '#ff66c4');
           if (soundEnabled) {
             popSound.currentTime = 0;
-            popSound.play().catch(e => console.log("Audio play error:", e));
+            try { popSound.play(); } catch (e) { console.log("Audio error:", e); }
           }
           return;
         }
@@ -531,18 +475,15 @@
       // Check character clicks
       for (let i = characters.length - 1; i >= 0; i--) {
         const char = characters[i];
-        const centerX = char.x + char.width/2;
-        const centerY = char.y + char.height/2;
-        const distance = Math.sqrt((clickX - centerX)**2 + (clickY - centerY)**2);
-        
-        if (distance <= char.width/2) {
+        if (clickX >= char.x && clickX <= char.x + char.width &&
+            clickY >= char.y && clickY <= char.y + char.height) {
           score += char.points;
           scoreElement.textContent = score;
           characters.splice(i, 1);
           createParticles(clickX, clickY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
           if (soundEnabled) {
             popSound.currentTime = 0;
-            popSound.play().catch(e => console.log("Audio play error:", e));
+            try { popSound.play(); } catch (e) { console.log("Audio error:", e); }
           }
           return;
         }
@@ -560,17 +501,22 @@
       timeElement.textContent = timeLeft;
       popup.style.display = 'none';
       replayBtn.style.display = 'none';
+      startBtn.style.display = 'block';
+      subtitle.style.display = 'none';
+      footer.style.display = 'none';
     }
     
     function startGame() {
       if (soundEnabled) {
         clickSound.currentTime = 0;
-        clickSound.play().catch(e => console.log("Audio play error:", e));
+        try { clickSound.play(); } catch (e) { console.log("Audio error:", e); }
       }
       
       gameRunning = true;
       resetGame();
       startBtn.style.display = 'none';
+      subtitle.style.display = 'block';
+      footer.style.display = 'block';
       
       // Start game timers
       spawnInterval = setInterval(createLogo, 500);
@@ -594,9 +540,10 @@
       clearInterval(charSpawnInterval);
       gameRunning = false;
       
-      popupText.textContent = `You scored ${score} proofs!`;
+      popupText.textContent = `Score: ${score} proofs!`;
       popup.style.display = 'block';
       replayBtn.style.display = 'block';
+      subtitle.style.display = 'none';
     }
     
     // Event listeners
@@ -611,13 +558,13 @@
       // Play a sound when toggling
       if (soundEnabled) {
         clickSound.currentTime = 0;
-        clickSound.play().catch(e => console.log("Audio play error:", e));
+        try { clickSound.play(); } catch (e) { console.log("Audio error:", e); }
       }
     });
     
     // Handle canvas resizing
     function resizeCanvas() {
-      canvas.width = Math.min(window.innerWidth * 0.9, 700);
+      canvas.width = Math.min(window.innerWidth * 0.95, 700);
     }
     
     window.addEventListener('resize', resizeCanvas);
