@@ -1,234 +1,518 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Tap to Prove</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prove HUNTER</title>
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      background-color: #1c0033;
-      overflow: hidden;
+      box-sizing: border-box;
     }
+    
+    body {
+      background: linear-gradient(135deg, #1c0033, #0b0019);
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+    }
+    
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
     #scoreboard {
       position: absolute;
-      top: 10px;
-      width: 100%;
+      top: 20px;
+      width: 90%;
+      max-width: 500px;
+      background: rgba(255, 102, 196, 0.2);
+      border-radius: 50px;
+      padding: 15px 30px;
       font-size: 24px;
-      color: white;
       text-align: center;
       z-index: 10;
-      display: none;
+      display: flex;
+      justify-content: space-between;
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(255, 102, 196, 0.5);
+      box-shadow: 0 0 20px rgba(255, 102, 196, 0.3);
     }
+    
     canvas {
       display: block;
-      background-color: transparent;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
     }
+    
     footer {
       position: absolute;
-      bottom: 10px;
+      bottom: 15px;
       width: 100%;
       text-align: center;
-      color: white;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      z-index: 10;
     }
-    #startBtn, #replayBtn {
+    
+    .btn {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      padding: 15px 30px;
-      font-size: 20px;
-      background: #ff66c4;
+      padding: 18px 40px;
+      font-size: 24px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #ff66c4, #ff2a9e);
       border: none;
       color: white;
       cursor: pointer;
-      border-radius: 10px;
-      box-shadow: 0 0 15px #ff66c4;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 102, 196, 0.5);
+      transition: all 0.3s ease;
+      z-index: 20;
     }
-    #replayBtn { display: none; }
-
+    
+    .btn:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 102, 196, 0.8);
+    }
+    
+    #replayBtn {
+      display: none;
+    }
+    
     #popup {
       position: absolute;
-      top: 40%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: #ff66c4;
+      background: linear-gradient(135deg, #ff66c4, #ff2a9e);
       color: white;
-      padding: 30px;
-      border-radius: 15px;
-      font-size: 22px;
+      padding: 40px;
+      border-radius: 20px;
+      font-size: 26px;
+      text-align: center;
       display: none;
       z-index: 100;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 40px rgba(255, 102, 196, 0.8);
+      backdrop-filter: blur(10px);
     }
+    
+    #popup h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
     #popup button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
+      margin-top: 30px;
+      padding: 15px 40px;
+      font-size: 20px;
+      font-weight: bold;
       background: white;
-      color: #ff66c4;
+      color: #ff2a9e;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #popup button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+    
+    #instructions {
+      position: absolute;
+      top: 80px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.6;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 15px;
+      display: none;
+      backdrop-filter: blur(5px);
+    }
+    
+    .pulse {
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.05); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(255, 102, 196, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    
+    #soundToggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    #soundToggle i {
+      font-size: 24px;
     }
   </style>
 </head>
 <body>
-  <div id="scoreboard">
-    Score: <span id="score">0</span> | Time Left: <span id="time">30</span>s
+  <div class="container">
+    <div id="scoreboard">
+      <div>Score: <span id="score">0</span></div>
+      <div>Time: <span id="time">30</span>s</div>
+    </div>
+    
+    <div id="instructions">
+      <p>Tap the falling logos to earn points!</p>
+      <p>Special characters give bonus points!</p>
+    </div>
+    
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <button id="startBtn" class="btn pulse">▶ PLAY</button>
+    <button id="replayBtn" class="btn">REPLAY</button>
+    
+    <div id="popup">
+      <h2>GAME OVER!</h2>
+      <div id="popupText">Your Score: 0 proofs</div>
+      <button>PLAY AGAIN</button>
+    </div>
+    
+    <footer>powered by melek</footer>
+    
+    <div id="soundToggle">
+      <i>🔊</i>
+    </div>
   </div>
-  <canvas id="gameCanvas"></canvas>
-  <button id="startBtn">▶ Play</button>
-  <button id="replayBtn">Replay</button>
-  <div id="popup">
-    <div id="popupText"></div>
-    <button onclick="startGame()">Replay</button>
-  </div>
-  <footer>powered by melek</footer>
 
   <script>
+    // Game elements
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
-
-    const logoImg = new Image(); logoImg.src = 'logo.png';
-    const gpuImg = new Image(); gpuImg.src = 'gpu.png';
-    const char1Img = new Image(); char1Img.src = 'char1.png';
-    const char2Img = new Image(); char2Img.src = 'char2.png';
-
+    const scoreElement = document.getElementById('score');
+    const timeElement = document.getElementById('time');
+    const startBtn = document.getElementById('startBtn');
+    const replayBtn = document.getElementById('replayBtn');
+    const popup = document.getElementById('popup');
+    const popupText = document.getElementById('popupText');
+    const popupButton = popup.querySelector('button');
+    const instructions = document.getElementById('instructions');
+    const soundToggle = document.getElementById('soundToggle');
+    
+    // Sound elements
+    const clickSound = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAAAAAAA=');
+    const popSound = new Audio('data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+    
+    // Game state
     let logos = [];
-    let gpu = null;
     let characters = [];
     let score = 0;
     let timeLeft = 30;
     let gameRunning = false;
-    let spawnInterval, gameTimer, gpuTimeout, charSpawnInterval;
-    let pauseTime = false;
-    let gpuCount = 0;
-
+    let spawnInterval, gameTimer, charSpawnInterval;
+    let soundEnabled = true;
+    let particles = [];
+    
+    // Create game elements
     function createLogo() {
-      if (!pauseTime) {
-        const x = Math.random() * (canvas.width - 120);
-        logos.push({ x, y: -120 });
-      }
-    }
-
-    function spawnCharacter() {
-      const img = Math.random() < 0.5 ? char1Img : char2Img;
       const x = Math.random() * (canvas.width - 100);
-      characters.push({ x, y: -100, img });
-    }
-
-    function spawnGpu() {
-      if (gpuCount >= 5) return;
-      gpuCount++;
-      const x = Math.random() * (canvas.width - 180);
-      gpu = { x, y: -90 };
-    }
-
-    function update() {
-      if (!gameRunning || pauseTime) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      logos.forEach((logo, index) => {
-        logo.y += 3;
-        ctx.drawImage(logoImg, logo.x, logo.y, 120, 120);
-        if (logo.y > canvas.height + 120) logos.splice(index, 1);
+      logos.push({ 
+        x, 
+        y: -100,
+        width: 80,
+        height: 80,
+        speed: 2 + Math.random() * 3,
+        type: 'logo'
       });
-
-      characters.forEach((char, index) => {
-        char.y += 2.5;
-        ctx.drawImage(char.img, char.x, char.y, 100, 100);
-        if (char.y > canvas.height + 100) characters.splice(index, 1);
+    }
+    
+    function spawnCharacter() {
+      const types = ['char1', 'char2'];
+      const type = types[Math.floor(Math.random() * types.length)];
+      
+      characters.push({ 
+        x: Math.random() * (canvas.width - 100),
+        y: -120,
+        width: 100,
+        height: 100,
+        speed: 1.5 + Math.random() * 2,
+        type: type
       });
-
-      if (gpu) {
-        gpu.y += 2;
-        ctx.drawImage(gpuImg, gpu.x, gpu.y, 180, 90);
-        if (gpu.y > canvas.height + 90) gpu = null;
+    }
+    
+    // Create particles for effects
+    function createParticles(x, y, color, count = 15) {
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x,
+          y,
+          size: 3 + Math.random() * 8,
+          speedX: -3 + Math.random() * 6,
+          speedY: -3 + Math.random() * 6,
+          color,
+          life: 20 + Math.random() * 30
+        });
       }
-
+    }
+    
+    // Draw game elements
+    function drawLogo(logo) {
+      ctx.fillStyle = '#ff66c4';
+      ctx.beginPath();
+      ctx.roundRect(logo.x, logo.y, logo.width, logo.height, 15);
+      ctx.fill();
+      
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('LOGO', logo.x + logo.width/2, logo.y + logo.height/2);
+    }
+    
+    function drawCharacter(char) {
+      const colors = {
+        char1: '#6a0dad',
+        char2: '#00aaff'
+      };
+      
+      ctx.fillStyle = colors[char.type];
+      ctx.beginPath();
+      ctx.arc(char.x + char.width/2, char.y + char.height/2, char.width/2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 24px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(char.type === 'char1' ? 'CHAR 1' : 'CHAR 2', char.x + char.width/2, char.y + char.height/2);
+    }
+    
+    function drawParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.life--;
+        p.size *= 0.97;
+        
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+    
+    // Game logic
+    function update() {
+      if (!gameRunning) return;
+      
+      // Clear canvas with a transparent overlay for trail effect
+      ctx.fillStyle = 'rgba(28, 0, 51, 0.2)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Update and draw logos
+      for (let i = logos.length - 1; i >= 0; i--) {
+        const logo = logos[i];
+        logo.y += logo.speed;
+        drawLogo(logo);
+        
+        // Remove if off screen
+        if (logo.y > canvas.height) {
+          logos.splice(i, 1);
+        }
+      }
+      
+      // Update and draw characters
+      for (let i = characters.length - 1; i >= 0; i--) {
+        const char = characters[i];
+        char.y += char.speed;
+        drawCharacter(char);
+        
+        // Remove if off screen
+        if (char.y > canvas.height) {
+          characters.splice(i, 1);
+        }
+      }
+      
+      // Draw particles
+      drawParticles();
+      
       requestAnimationFrame(update);
     }
-
+    
+    // Handle clicks
     canvas.addEventListener('click', function(e) {
-      if (!gameRunning || pauseTime) return;
+      if (!gameRunning) return;
+      
       const rect = canvas.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
-
-      logos.forEach((logo, index) => {
-        if (clickX >= logo.x && clickX <= logo.x + 120 &&
-            clickY >= logo.y && clickY <= logo.y + 120) {
-          score++;
-          document.getElementById('score').textContent = score;
-          logos.splice(index, 1);
+      
+      // Check logo clicks
+      for (let i = logos.length - 1; i >= 0; i--) {
+        const logo = logos[i];
+        if (clickX >= logo.x && clickX <= logo.x + logo.width &&
+            clickY >= logo.y && clickY <= logo.y + logo.height) {
+          score += 1;
+          scoreElement.textContent = score;
+          logos.splice(i, 1);
+          createParticles(clickX, clickY, '#ff66c4');
+          if (soundEnabled) popSound.play();
+          return;
         }
-      });
-
-      characters.forEach((char, index) => {
-        if (clickX >= char.x && clickX <= char.x + 100 &&
-            clickY >= char.y && clickY <= char.y + 100) {
-          score += 5;
-          characters.splice(index, 1);
-          document.getElementById('score').textContent = score;
+      }
+      
+      // Check character clicks
+      for (let i = characters.length - 1; i >= 0; i--) {
+        const char = characters[i];
+        const centerX = char.x + char.width/2;
+        const centerY = char.y + char.height/2;
+        const distance = Math.sqrt((clickX - centerX)**2 + (clickY - centerY)**2);
+        
+        if (distance <= char.width/2) {
+          score += char.type === 'char1' ? 3 : 5;
+          scoreElement.textContent = score;
+          characters.splice(i, 1);
+          createParticles(clickX, clickY, char.type === 'char1' ? '#6a0dad' : '#00aaff', 25);
+          if (soundEnabled) popSound.play();
+          return;
         }
-      });
-
-      if (gpu && clickX >= gpu.x && clickX <= gpu.x + 180 &&
-          clickY >= gpu.y && clickY <= gpu.y + 90) {
-        pauseTime = true;
-        setTimeout(() => { pauseTime = false; }, 3000);
-        gpu = null;
       }
     });
-
+    
+    // Game control functions
     function resetGame() {
       logos = [];
       characters = [];
-      gpu = null;
+      particles = [];
       score = 0;
       timeLeft = 30;
-      pauseTime = false;
-      gpuCount = 0;
-      document.getElementById('score').textContent = score;
-      document.getElementById('time').textContent = timeLeft;
-      document.getElementById('scoreboard').style.display = 'block';
-      document.getElementById('popup').style.display = 'none';
+      scoreElement.textContent = score;
+      timeElement.textContent = timeLeft;
+      document.getElementById('scoreboard').style.display = 'flex';
+      popup.style.display = 'none';
     }
-
+    
     function startGame() {
+      if (soundEnabled) clickSound.play();
       gameRunning = true;
       resetGame();
-      document.getElementById('startBtn').style.display = 'none';
-      document.getElementById('replayBtn').style.display = 'none';
-      spawnInterval = setInterval(createLogo, 700);
-      charSpawnInterval = setInterval(spawnCharacter, 1800);
-      gpuTimeout = setInterval(spawnGpu, 6000);
+      startBtn.style.display = 'none';
+      replayBtn.style.display = 'none';
+      instructions.style.display = 'block';
+      
+      // Start game timers
+      spawnInterval = setInterval(createLogo, 600);
+      charSpawnInterval = setInterval(spawnCharacter, 2500);
+      
       gameTimer = setInterval(() => {
-        if (!pauseTime) timeLeft--;
-        document.getElementById('time').textContent = timeLeft;
-        if (timeLeft <= 0) endGame();
+        timeLeft--;
+        timeElement.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          endGame();
+        }
       }, 1000);
+      
       update();
     }
-
+    
     function endGame() {
       clearInterval(spawnInterval);
       clearInterval(gameTimer);
-      clearInterval(gpuTimeout);
       clearInterval(charSpawnInterval);
       gameRunning = false;
-      document.getElementById('replayBtn').style.display = 'block';
-      document.getElementById('popupText').textContent = '⏱️Time Up! 📃Your Score ' + score + ' proofs.';
-      document.getElementById('popup').style.display = 'block';
+      
+      popupText.textContent = `You scored ${score} proofs!`;
+      popup.style.display = 'block';
+      replayBtn.style.display = 'block';
+      instructions.style.display = 'none';
     }
-
-    document.getElementById('startBtn').addEventListener('click', startGame);
-    document.getElementById('replayBtn').addEventListener('click', startGame);
+    
+    // Event listeners
+    startBtn.addEventListener('click', startGame);
+    replayBtn.addEventListener('click', startGame);
+    popupButton.addEventListener('click', startGame);
+    
+    soundToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundToggle.querySelector('i').textContent = soundEnabled ? '🔊' : '🔇';
+    });
+    
+    // Handle canvas resizing
+    function resizeCanvas() {
+      canvas.width = Math.min(window.innerWidth - 40, 800);
+      canvas.height = Math.min(window.innerHeight - 150, 600);
+    }
+    
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    // Initialize the game
+    resetGame();
+    
+    // Add a subtle background animation
+    function backgroundAnimation() {
+      ctx.fillStyle = 'rgba(28, 0, 51, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < 3; i++) {
+        const size = Math.random() * 10 + 2;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const alpha = Math.random() * 0.1 + 0.05;
+        
+        ctx.fillStyle = `rgba(255, 102, 196, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      if (!gameRunning) {
+        requestAnimationFrame(backgroundAnimation);
+      }
+    }
+    
+    backgroundAnimation();
   </script>
 </body>
 </html>
